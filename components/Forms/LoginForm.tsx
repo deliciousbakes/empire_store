@@ -1,3 +1,4 @@
+"use client";
 import { LoginProps } from "@/types/types";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -9,6 +10,7 @@ import toast from "react-hot-toast";
 import PasswordInput from "../FormInputs/PasswordInput";
 import SubmitButton from "../FormInputs/SubmitButton";
 import TextInput from "../FormInputs/TextInput";
+
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
   const {

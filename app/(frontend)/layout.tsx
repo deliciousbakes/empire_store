@@ -1,10 +1,12 @@
  
 import Footer from "@/components/fontend/Site-footer";
 import SiteHeader from "@/components/fontend/site-header";
+import { authOptions } from "@/config/auth";
+import { getServerSession } from "next-auth";
 import { ReactNode } from "react";
 
 const HomeLayout = async ({ children }: { children: ReactNode }) => {
-  const session = null;
+  const session = await getServerSession(authOptions);
   return (
     <div className="bg-white">
       <SiteHeader session={session} />

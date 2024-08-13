@@ -16,13 +16,17 @@ import getInitials from "@/lib/generateInitials";
 import AuthenticatedAvatar from "../global/AuthenticatedAvatar";
  
 export default function SiteHeader({ session }: { session: Session | null }) {
+  
   const navigation = [
     { name: "Sales", href: "/frontend/sales" },
-    { name: "How it Works", href: "#howItWorks" },
-    { name: "About", href: "/about" },
     { name: "Register", href: "/register" },
-    { name: "Help", href: "/help" },
     { name: "Dashboard", href: "/dashboard" },
+    { name: "Products", href: "/dashboard/products" },
+    { name: "Orders", href: "/dashboard/orders" },
+    { name: "Categories", href: "/dashboard/categories" },
+    { name: "Employees", href: "/dashboard/employees" },
+    { name: "Users", href: "/dashboard/users" },
+    { name: "About", href: "/about" },
   ];
   const router = useRouter();
   async function handleLogout() {
@@ -41,8 +45,8 @@ export default function SiteHeader({ session }: { session: Session | null }) {
         className="flex items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-                  <Logo href="/" labelShown={true} title="Starter Logo" />
-                 
+          <Logo href="/" labelShown={true} title="Starter Logo" />
+
           {/* <a href="#" className="-m-1.5 p-1.5">
             <span className="sr-only">Car Care Gate</span>
             <img
@@ -121,8 +125,8 @@ export default function SiteHeader({ session }: { session: Session | null }) {
                     <Link href="/dashboard">
                       <Avatar>
                         <AvatarImage
-                          src={session?.user?.image??""}
-                          alt={session?.user?.name??""}
+                          src={session?.user?.image ?? ""}
+                          alt={session?.user?.name ?? ""}
                         />
                         <AvatarFallback>
                           {getInitials(session?.user?.name)}
@@ -133,7 +137,7 @@ export default function SiteHeader({ session }: { session: Session | null }) {
                   </Button>
                 ) : (
                   <Button asChild variant={"outline"}>
-                    <Link href="/login">Log in</Link>
+                    <Link href="/login">Login</Link>
                   </Button>
                 )}
               </div>

@@ -1,12 +1,13 @@
 /** @format */
-
-import LoginForm from "@/components/Forms/LoginForm1";
+"use client";
+import LoginForm from "@/components/Forms/LoginForm";
 import { authOptions } from "@/config/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
+  // console.log(`session from login form: ${session}}`);
   if (session) {
     redirect("/dashboard");
   }

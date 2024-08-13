@@ -1,11 +1,11 @@
 /** @format */
 "use client"
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 // import { links } from "@/components/utils/links";
 import getInitials from "@/lib/generateInitials";
@@ -18,7 +18,12 @@ import LogoutBtn from "./LogoutBtn";
 // import UserIcon from './UserIcon';
 // import { links } from '@/utils/links';
 
-export const AuthenticatedAvatar = ({session}:{session:Session |null }) => {
+export const AuthenticatedAvatar = ({
+  session,
+}: {
+  session: Session | null;
+}) => {
+  console.log(` Session log for Authenticated Avatar: ${session}`);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -31,27 +36,27 @@ export const AuthenticatedAvatar = ({session}:{session:Session |null }) => {
           className="w-8 h-8   rounded-full "
           width={200}
           height={200}
-              />
-              <Avatar>
-                  <AvatarImage src={""} alt={""} />
-                  <AvatarFallback>
-                      {getInitials(session?.user?.name)}
-                  </AvatarFallback>
-                      
-              </Avatar>
+        />
+        <Avatar>
+          <AvatarImage src={""} alt={""} />
+          <AvatarFallback>{getInitials(session?.user?.name)}</AvatarFallback>
+        </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-58" align="start" sideOffset={10}>
         <DropdownMenuLabel className="pl-4  font-semibold text-lg">
-                  <p>{session?.user?.name }</p>
-                  <p   className="text-xs text-muted-foreground">{session?.user?.email }</p>
+          <p>{session?.user?.name}</p>
+          <p className="text-xs text-muted-foreground">
+            {session?.user?.email}
+          </p>
         </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-              <Link   href="/dashboard">
-              Dashboard</Link>
-              </DropdownMenuItem>
-       <DropdownMenuItem>Services</DropdownMenuItem>
-       <DropdownMenuItem><LogoutBtn/></DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link href="/dashboard">Dashboard</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>Services</DropdownMenuItem>
+        <DropdownMenuItem>
+          <LogoutBtn />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>
