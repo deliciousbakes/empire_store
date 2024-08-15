@@ -1,13 +1,16 @@
  
+import { CheckUser } from "@/actions/UserActions";
 import Footer from "@/components/fontend/Site-footer";
 import SiteHeader from "@/components/fontend/site-header";
 import { ReactNode } from "react";
 
 const HomeLayout = async ({ children }: { children: ReactNode }) => {
   const session = null;
+  const loggedInUser = await CheckUser()
+  console.log({loggedInUser})
   return (
     <div className="bg-white">
-      <SiteHeader session={session} />
+      <SiteHeader  />
       <div className="relative isolate px-6 pt-14 lg:px-8">
         <div
           aria-hidden="true"

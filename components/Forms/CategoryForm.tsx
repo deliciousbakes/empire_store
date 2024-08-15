@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { CategoryProps } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,10 +19,12 @@ import TextInput from "@/components/FormInputs/TextInput";
 import { createCategory, updateCategoryById } from "@/actions/CategoryAction";
 import ImageInput from "@/components/FormInputs/ImageInput";
 import { generateSlug } from "@/lib/generateSlug";
+import { CategorySchemaType } from "@/utils/schemas";
 import { Category } from "@prisma/client";
-// import toast from "react-hot-toast";
-import { toast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 import FormFooter from "./FormFooter";
+import { GetUserFromDatabaseById } from "@/actions/UserActions";
+import { currentUser } from "@clerk/nextjs/server";
 
 type CategoryFormProps = {
   editingId?: string | undefined;
@@ -33,12 +34,15 @@ export default function CategoryForm({
   editingId,
   initialData,
 }: CategoryFormProps) {
+ 
+  // const loggedInDBuser = GetUserFromDatabaseById()
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<CategoryProps>({
+  } = useForm<CategorySchemaType>({
     defaultValues: {
       title: initialData?.title,
       description: initialData?.description || "",
@@ -47,10 +51,10 @@ export default function CategoryForm({
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const initialImage = initialData?.imageUrl || "/tent-2.JPG";
+  const initialImage = initialData?.imageUrl || "/images/tent-2.JPG";
   const [imageUrl, setImageUrl] = useState(initialImage);
 
-  async function saveCategory(data: CategoryProps) {
+  async function saveCategory(data: CategorySchemaType) {
     try {
       setLoading(true);
       data.slug = generateSlug(data.title);
@@ -60,26 +64,28 @@ export default function CategoryForm({
         await updateCategoryById(editingId, data);
         setLoading(false);
         // Toast
-        toast({ description: "Category Successfully Updated!" });
+        toast("Category Successfully Updated!" );
         //reset
         reset();
         //route
         router.push("/dashboard/categories");
-        setImageUrl("/tent-2.JPG");
+        setImageUrl("/images/tent-2.JPG");
       } else {
         await createCategory(data);
         setLoading(false);
         // Toast
-        toast({ description: "Category Successfully Created!" });
+        toast("Category created successfully !" );
         //reset
         reset();
-        setImageUrl("/tent-2.JPG");
+        setImageUrl("/images/tent-2.JPG");
         //route
         router.push("/dashboard/categories");
       }
     } catch (error) {
       setLoading(false);
       console.log(error);
+             toast("Problems during the creation of the category!");
+
     }
   }
 

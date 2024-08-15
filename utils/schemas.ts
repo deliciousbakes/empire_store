@@ -209,6 +209,15 @@ export const  CategorySchema = z.object({
       message: "Slug must be less than 100 characters.",
     }),
 
+  userId: z
+    .string()
+    .min(10, {
+      message: "Slug must be at least 100 characters.",
+    })
+    .max(200, {
+      message: "Slug must be less than 200 characters.",
+    }),
+
   imageUrl:z
     .string()
     .min(2, {

@@ -50,23 +50,24 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  name          String
-  firstName     String
-  phone         Int
-  lastName      String
-  email         String    @unique
-  password      String
-  emailVerified DateTime?
-  status        Boolean?  @default(true)
-  image         String?
-  role          UserRole  @default(USER)
-  updatedAt     DateTime  @updatedAt()
-  createdAt     DateTime  @default(now())
-  accounts      Account[]
-  sessions      Session[]
-  isVerfied     Boolean?  @default(false)
-  token         Int?
+  id           String         @id @default(uuid())
+  firstName    String?
+  lastName     String?
+  email        String         @unique
+  clerkUserId  String         @unique
+  image        String?
+  role         UserRole       @default(USER)
+  updatedAt    DateTime       @updatedAt()
+  createdAt    DateTime       @default(now())
+  Category     Category[]
+  Employee     Employee[]
+  Order        Order[]
+  OrderDetails OrderDetails[]
+  Cart         Cart[]
+  Product      Product[]
+  Pyment       Payment[]
+  Account      Account[]
+  Session      Session[]
 }
 
 model Category {
@@ -78,17 +79,22 @@ model Category {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt()
   products    Product[]
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 model Employee {
-  id           String   @id @default(uuid())
-  emplPhone    Int      @unique
+  id           String @id @default(uuid())
+  emplPhone    Int    @unique
   name         String
   emplImageUrl String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt()
-  emplOrders   Order[]
-  carts        Cart[]
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt()
+  emplOrders Order[]
+  carts      Cart[]
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
 }
 
 model Order {
@@ -103,6 +109,8 @@ model Order {
   payments     Payment[]
   Employee     Employee?      @relation(fields: [employeeId], references: [id])
   employeeId   String?
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       String?
 }
 
 model Payment {
@@ -115,6 +123,8 @@ model Payment {
 
   Order   Order?  @relation(fields: [orderId], references: [id])
   orderId String?
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
 }
 
 model OrderDetails {
@@ -129,6 +139,8 @@ model OrderDetails {
   orderId     String?
   Product     Product? @relation(fields: [productId], references: [id])
   productId   String?
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 model Cart {
@@ -143,6 +155,8 @@ model Cart {
   employeeId  String?
   Product     Product?  @relation(fields: [productId], references: [id])
   productId   String?
+  User        User?     @relation(fields: [userId], references: [id])
+  userId      String?
 }
 
 model Product {
@@ -162,4 +176,6 @@ model Product {
 
   Category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     String?
 }

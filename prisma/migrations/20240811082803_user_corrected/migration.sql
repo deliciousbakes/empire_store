@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ALTER COLUMN "isVerfied" DROP NOT NULL,
-ALTER COLUMN "status" DROP NOT NULL;

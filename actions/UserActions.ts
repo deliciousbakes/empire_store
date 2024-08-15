@@ -1,56 +1,10 @@
 "use server";
 
 import db from "@/lib/db";
-import { UserProps } from "@/types/types";
-import bcrypt from "bcryptjs";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-export async function createUser(data: UserProps) {
-  const { email, password, firstName, lastName, name, phone, image, role } =
-    data;
-  try {
-    // Hash the PAASWORD
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const phoneNumber = Number(phone);
-    const existingUser = await db.user.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (existingUser) {
-      return {
-        error: `User with this email(${email}) already exists`,
-        status: 409,
-        data: null,
-      };
-    }
-    const newUser = await db.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        firstName,
-        lastName,
-        name,
-        phone: phoneNumber,
-        image,
-        role,
-      },
-    });
-    revalidatePath("/dashboard/users");
-    console.log({ newUser });
-    return {
-      error: null,
-      status: 200,
-      data: newUser,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error: `Something Went wrong, Please try again`,
-      status: 500,
-      data: null,
-    };
-  }
-}
+
+
 
 export async function getUsers() {
   try {
@@ -61,15 +15,6 @@ export async function getUsers() {
   }
 }
 
-export async function createBulkUsers(users: UserProps[]) {
-  try {
-    for (const user of users) {
-      await createUser(user);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
 export async function deleteUsers() {
   try {
     await db.user.deleteMany();
@@ -78,3 +23,43 @@ export async function deleteUsers() {
     console.log(error);
   }
 }
+
+export const CheckUser = async () => {
+  const loggedInUser = await currentUser();
+  console.log({ loggedInUser });
+
+  if (!loggedInUser) return null;
+
+  const loggedInUserInDB = await db.user.findUnique({
+    where: {
+      clerkUserId: loggedInUser.id,
+    },
+  });
+
+  if (loggedInUserInDB) return loggedInUserInDB;
+
+  if (!loggedInUserInDB) {
+    return await db.user.create({
+      data: {
+        clerkUserId: loggedInUser.id,
+        image:loggedInUser.imageUrl,
+        email: loggedInUser.emailAddresses[0].emailAddress,
+        firstName:loggedInUser.firstName,
+        lastName: loggedInUser.lastName,
+        role:"ADMIN"
+      },
+    });
+  }
+  return loggedInUserInDB;
+};
+import React from 'react'
+
+
+export const GetUserFromDatabaseById = async () => {
+  const currentDbUser= await currentUser();
+
+  const loggedInUser = await db.user.findUnique({
+    where: { clerkUserId: currentDbUser?.id },
+  });
+  return loggedInUser;
+};
